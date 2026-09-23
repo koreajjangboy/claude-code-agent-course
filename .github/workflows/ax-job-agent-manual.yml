@@ -5,6 +5,9 @@ name: AX Job Agent (manual)
 on:
   workflow_dispatch:
 
+  schedule:
+    - cron: "0 0 * * 1"
+
 permissions:
   contents: read
 
@@ -21,6 +24,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # schedule은 main에서 workflow가 실행되므로 실제 프로젝트 브랜치를 지정한다.
+          ref: ${{ github.event_name == 'schedule' && 'ax-job-agent' || github.ref }}
 
       - name: Setup Python
         uses: actions/setup-python@v5
